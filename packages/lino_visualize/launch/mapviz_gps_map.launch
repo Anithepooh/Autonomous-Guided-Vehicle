@@ -1,0 +1,36 @@
+<launch>
+<node pkg="mapviz" type="mapviz" name="mapviz" required="true"/>
+<!-- 啟動launch節點 -->
+
+<node pkg="nmea_navsat_driver" type="nmea_serial_driver" name="nmea_serial_driver">
+<param name="port" type="string" value="/dev/ttyACM1"/>
+<param name="baud" type="int" value="19200"/>
+</node>
+<!-- 啟動nmea_serial_driver節點並加入參數 -->
+
+<node pkg="swri_transform_util" type="initialize_origin.py" name="initialize_origin">
+<!-- 啟動節點接收GPS訊號並轉換為WGS84座標連接到ROS tf tree -->
+<param name="local_xy_frame" value="/map"/>
+<param name="local_xy_origin" value="auto"/>
+<!-- 使用第一條GPS訊號當作地圖位置 -->
+
+<!-- <rosparam param="local_xy_origins"> 
+[{ name: swri,
+latitude: 29.45196669,
+longitude: -98.61370577,
+altitude: 233.719,
+heading: 0.0},
+{ name: back_40,
+latitude: 29.447507,
+longitude: -98.629367,
+altitude: 200.0,
+heading: 0.0}]-->
+<!-- 因為參數設定為第一個GPS訊號,所以預設參數在這邊用不到 -->
+
+<!-- </rosparam> -->
+<!-- <remap from="fix" to="/navsat/fix"/> -->
+<!-- 從/navsat/fix接收訊號,但因為nmea_driver直接輸出/fix故不用此行 -->
+
+</node>
+ <node pkg="tf" type="static_transform_publisher" name="swri_transform" args="0 0 0 0 0 0 /map /origin 100"  />
+</launch>
