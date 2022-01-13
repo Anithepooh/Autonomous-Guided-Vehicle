@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- Simple Planner -->
+
+  <node name="simple_planner_node" pkg="simple_planner" type="planner.py" output="screen">
+  </node>
+
+</launch>
